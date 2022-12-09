@@ -1,0 +1,5270 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{color, colortbl}
+\definecolor{LightGreen}{rgb}{0.9,1,0.9}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3.5cm
+\topmargin 2.5cm
+\rightmargin 2.5cm
+\bottommargin 2.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+ABC vn 2.0: Guide to running Hydro-ABC, the research convective scale modelling
+ system
+\end_layout
+
+\begin_layout Standard
+\align center
+Ross Bannister, National Centre for Earth Observation, University of Reading,
+ Reading, UK, r.n.bannister@reading.ac.uk
+\end_layout
+
+\begin_layout Standard
+\align center
+Jiangshan Zhu, Institute of Atmospheric Physics, Chinese Academy of Sciences,
+ Beijing, P.R.
+ China, zhujiangshan@mail.iap.ac.cn
+\end_layout
+
+\begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Introduction"
+
+\end_inset
+
+Introduction
+\end_layout
+
+\begin_layout Subsection
+The ABC model
+\end_layout
+
+\begin_layout Standard
+The Hydro-ABC model (vn 2.0) is a combined 2D (longitude/height) convective-scale
+ toy model, which includes evaporation and condensation processes.
+ The model equations are as follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{subequations}
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "eq:final_eqns"
+
+\end_inset
+
+ 
+\begin_inset Formula 
+\begin{align}
+\frac{\partial u}{\partial t}+B\mathbf{u}\cdot\nabla u+C\frac{\partial\tilde{\rho}^{\prime}}{\partial x}-fv & =0\label{eq:u_final}\\
+\frac{\partial v}{\partial t}+B\mathbf{u}\cdot\nabla v+fu & =0\label{eq:v_final}\\
+\frac{\partial w}{\partial t}+B\mathbf{u}\cdot\nabla w+C\frac{\partial\tilde{\rho}^{\prime}}{\partial z}-b' & =0\label{eq:w_final}\\
+\frac{\partial\tilde{\rho}^{\prime}}{\partial t}+B\nabla\cdot\left(\tilde{\rho}\mathbf{u}\right) & =0\label{eq:cont_final}\\
+\frac{\partial b^{\prime}}{\partial t}+B\mathbf{u}\cdot\nabla b^{\prime}+A^{2}w & =\mathcal{S}_{b^{\prime}}\label{eq:thermo_final}\\
+p^{\prime} & =C\rho_{0}\tilde{\rho}^{\prime}\label{eq:state}\\
+\frac{\partial\tilde{\rho}q}{\partial t}+B\nabla\cdot\left(\tilde{\rho}q\mathbf{u}\right) & =\tilde{\rho}(Ev-Co)\label{eq:vapour}\\
+\frac{\partial\tilde{\rho}q_{\mathrm{c}}}{\partial t}+B\nabla\cdot\left(\tilde{\rho}q_{\mathrm{c}}\mathbf{u}\right) & =-\tilde{\rho}(Ev-Co).\label{eq:condensate}
+\end{align}
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{subequations}
+\end_layout
+
+\end_inset
+
+The prognostic variables are as follows:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $u$
+\end_inset
+
+ is the zonal wind,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $v$
+\end_inset
+
+ is the meridional wind,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $w$
+\end_inset
+
+ is the vertical wind,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mathbf{u}=(u,v,w)$
+\end_inset
+
+ is the wind vector,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\tilde{\rho}$
+\end_inset
+
+ is a density-like variable (where 
+\begin_inset Formula $\tilde{\rho}^{\prime}$
+\end_inset
+
+ is the perturbation, 
+\begin_inset Formula $\tilde{\rho}=\tilde{\rho}_{0}+\tilde{\rho}^{\prime}$
+\end_inset
+
+, where in this model, 
+\begin_inset Formula $\tilde{\rho}_{0}=1$
+\end_inset
+
+),
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $b^{\prime}$
+\end_inset
+
+ is a buoyancy-like variable (for meteorologists, 
+\begin_inset Formula $b^{\prime}$
+\end_inset
+
+ is related to potential temperature, 
+\begin_inset Formula $\theta^{\prime}$
+\end_inset
+
+, by 
+\begin_inset Formula $b^{\prime}=g\theta^{\prime}/\theta_{\mathrm{R}}$
+\end_inset
+
+, where 
+\begin_inset Formula $g$
+\end_inset
+
+ is the acceleration due to gravity and 
+\begin_inset Formula $\theta_{\mathrm{R}}$
+\end_inset
+
+ is the reference potential temperature of 273K),
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $q$
+\end_inset
+
+ is the vapour mixing ratio, and
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $q_{\mathrm{c}}$
+\end_inset
+
+ is the water condensate mixing ratio.
+\end_layout
+
+\begin_layout Standard
+The dimension variables are as follows: 
+\begin_inset Formula $x$
+\end_inset
+
+ is longitudinal distance, 
+\begin_inset Formula $z$
+\end_inset
+
+ is vertical distance, and 
+\begin_inset Formula $t$
+\end_inset
+
+ is time.
+ Constant parameters to be chosen by the user are as follows: 
+\begin_inset Formula $A$
+\end_inset
+
+ (units 
+\begin_inset Formula $\mathrm{s}^{-1}$
+\end_inset
+
+) is the static stability (equivalent to the pure gravity wave frequency),
+ 
+\begin_inset Formula $B$
+\end_inset
+
+ (dimensionless) multiplies the advection and divergence terms, and 
+\begin_inset Formula $C$
+\end_inset
+
+ (units 
+\begin_inset Formula $\mathrm{m}^{2}\mathrm{s}^{-2}$
+\end_inset
+
+) relates density perturbations to pressure perturbations, 
+\begin_inset Formula $p'=C\rho_{0}\tilde{\rho}'$
+\end_inset
+
+, where 
+\begin_inset Formula $\rho_{0}$
+\end_inset
+
+ is a reference density.
+ The value of 
+\begin_inset Formula $\sqrt{BC}$
+\end_inset
+
+ is the pure acoustic wave speed).
+ These parameters give the model its 
+\begin_inset Quotes eld
+\end_inset
+
+ABC
+\begin_inset Quotes erd
+\end_inset
+
+ name.
+ The constant 
+\begin_inset Formula $f$
+\end_inset
+
+ is the Coriolis parameter.
+ 
+\begin_inset Formula $\mathcal{S}_{b^{\prime}}$
+\end_inset
+
+ is the buoyancy source term (related to latent heat exchange, which is
+ activated when there is a change in water phase), 
+\begin_inset Formula $Ev$
+\end_inset
+
+ is the evaporation rate, and 
+\begin_inset Formula $Co$
+\end_inset
+
+ is the condensation rate.
+ The key differences between Hydro-ABC the dry ABC system are 
+\begin_inset Formula $\mathcal{S}_{b^{\prime}}$
+\end_inset
+
+ in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:thermo_final"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and the additional equations 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:vapour"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:condensate"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ How 
+\begin_inset Formula $\mathcal{S}_{b^{\prime}}$
+\end_inset
+
+ and 
+\begin_inset Formula $Ev-Co$
+\end_inset
+
+ are parametrised in Hydro-ABC is described in the main paper (submitted
+ to Geo-scientific Model Development, December 2022).
+ There is also a tracer transport equation, which advects a tracer, 
+\begin_inset Formula $q_{\mathrm{tr}}$
+\end_inset
+
+, with the wind vector 
+\begin_inset Formula $\mathbf{u}$
+\end_inset
+
+, and not by the modified winds, 
+\begin_inset Formula $B\mathbf{u}$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial q_{\mathrm{tr}}}{\partial t}+\mathbf{u}\cdot\nabla q_{\mathrm{tr}}=0.\label{eq:tracer_final}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The model is run in a 2D slice (longitude/height) geometry.
+ All variables are considered constant in the meridional direction.
+ The model grid is an Arakawa-C grid in the horizontal and a Charney-Phillips
+ grid in the vertical (Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:grid"
+
+\end_inset
+
+).
+ The default grid has a size of 1.5km in the horizontal, with 360 grid-points,
+ and 60 vertical levels.
+ The scientific rational for this model is given in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "petrie2017abc"
+literal "true"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Grid.eps
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:grid"
+
+\end_inset
+
+The arrangement of variables on the toy model's grid: an Arakawa-C grid
+ in the horizontal and a Charney-Phillips grid in the vertical.
+ Note the abbreviations: FL=Full Level and HL=Half Level.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The code is set-up as a number of master subroutines, each designed to do
+ a particular job (such as running the model from specified initial conditions).
+ This guide comprises the following sections, in Sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:List-of-master"
+
+\end_inset
+
+ we give the full list of master routines; in Sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Downloading-and-installing"
+
+\end_inset
+
+ we describe how the software is downloaded and installed (also stating
+ which software libraries are required), and in Sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Using-the-master"
+
+\end_inset
+
+ (which makes up the bulk of this documentation) we describe how each master
+ routine is used.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "90col%"
+height "1pt"
+
+\end_inset
+
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:List-of-master"
+
+\end_inset
+
+List of master routines
+\end_layout
+
+\begin_layout Standard
+The code is written in Fortran-90, and the master routines are run inside
+ bash script wrappers.
+ The recommended operating system to run the code is Linux.
+ Scientific documentation is provided on the model 
+\begin_inset CommandInset citation
+LatexCommand citep
+key "petrie2017abc"
+literal "true"
+
+\end_inset
+
+ and on the data assimilation (in preparation).
+ Each of these master routines is associated with a top-level Fortran 90
+ subroutine (
+\shape italic
+.f90
+\shape default
+), and for some a top-level python routine (
+\shape italic
+.py
+\shape default
+) for plotting the results.
+ There are also examples (labelled with the respective master routine name)
+ available.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="2">
+<features islongtable="true" longtabularalignment="center">
+<column alignment="center" valignment="top" width="5cm">
+<column alignment="center" valignment="top" width="9cm">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+rowcolor{LightGreen}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Master routine
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Purpose
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Master_prepareABC_InitState (Sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Master_PrepareABC_InitState"
+
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Inputs a UM dump and generates a single 2D longitude/height slice set of
+ fields that is suitable as a set of initial initialised initial conditions
+ for the ABC model.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Master_RunNLModel (Sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Master_RunNLModel"
+
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Makes a single run of the ABC model from a specified set of initial conditions.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Master_Linear_Analysis (Sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Master_Linear_Analysis"
+
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Analyses the linear modes of the dry parts of the ABC model.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "90col%"
+height "1pt"
+
+\end_inset
+
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Downloading-and-installing"
+
+\end_inset
+
+Downloading and installing the software
+\end_layout
+
+\begin_layout Subsection
+Required libraries on host system
+\end_layout
+
+\begin_layout Standard
+This software requires the following free software and libraries to be installed
+ on the host system.
+\end_layout
+
+\begin_layout Itemize
+Fortran compiler (f95).
+ This is needed to compile the Fortran-90 code into executable files.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Net CDF library.
+ This is needed to handle the input and output of fields.
+\end_layout
+
+\begin_layout Itemize
+FFTpack.
+ This is needed to perform the fast Fourier transforms.
+\end_layout
+
+\begin_layout Itemize
+LApack.
+\end_layout
+
+\begin_layout Itemize
+tmglib.
+\end_layout
+
+\begin_layout Itemize
+refblas.
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Contents of ABC download
+\end_layout
+
+\begin_layout Standard
+The following sets of files are included with this software in the respective
+ directories.
+\end_layout
+
+\begin_layout Itemize
+ABCvn1.4/src
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Readme.txt
+\end_layout
+
+\begin_layout Itemize
+Fortran-90 source code (multiple .f90 files).
+\end_layout
+
+\begin_layout Itemize
+Interface files for subroutines that have optional arguments (multiple .interface
+ files).
+\end_layout
+
+\begin_layout Itemize
+makefile (to manage the compilation of the software, depending upon the
+ master routine to be run).
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+ABCvn1.4/docs
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Documentation of the system.
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Compiling the code
+\end_layout
+
+\begin_layout Standard
+Once the 
+\shape italic
+src
+\shape default
+ directory is downloaded, go into this directory and type
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+make all
+\end_layout
+
+\end_inset
+
+to compile all programs.
+ Alternatively to compile just one master program (e.g.
+ Master_RunNLModel), type
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+make Master_RunNLModel.out
+\end_layout
+
+\end_inset
+
+Further guidance is given below.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "90col%"
+height "1pt"
+
+\end_inset
+
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Using-the-master"
+
+\end_inset
+
+Using the master routines
+\end_layout
+
+\begin_layout Standard
+Each master routine is described in this section.
+ This includes how to compile the master routine and dependent code, and
+ how to run it.
+ The namelist variables are defined, plus the required input and output
+ files.
+\end_layout
+
+\begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Master_PrepareABC_InitState"
+
+\end_inset
+
+Master_PrepareABC_InitState
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+Inputs a UM dump and generates a single 2D longitude/height slice set of
+ fields that is suitable as a set of initial initialised initial conditions
+ for the ABC model.
+\end_layout
+
+\begin_layout Subsubsection*
+To compile
+\end_layout
+
+\begin_layout Standard
+Go to directory containing source code ($ABC_SRC), and issue:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+make Master_PrepareABC_InitState.out
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+To run
+\end_layout
+
+\begin_layout Standard
+Prepare namelist file UserOptions.nl, go to directory containing this file,
+ and issue:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+$ABC_SRC/Master_PrepareABC_InitState.out < namelist_file
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Namelist variables
+\end_layout
+
+\begin_layout Standard
+The namelist variables are described in UserOptions.nl, and should be placed
+ in the directory where the above run command is issued.
+ The variables are described in the following table, where blue entries
+ describe the 
+\color blue
+input directories/files
+\color inherit
+, red entries describe the 
+\color red
+output directories/files
+\color inherit
+, and purple entries describe the 
+\color purple
+input/output directories/files
+\color inherit
+.
+ An example namelist is given in the file ABCvn1.4/examples/Master_PrepareABC_Ini
+tialState/UserOptions.nl.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="31" columns="5">
+<features islongtable="true" longtabularalignment="center">
+<column alignment="center" valignment="top" width="3cm">
+<column alignment="center" valignment="top" width="1.5cm">
+<column alignment="center" valignment="top" width="5cm">
+<column alignment="center" valignment="top" width="1.5cm">
+<column alignment="center" valignment="top" width="3cm">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+rowcolor{LightGreen}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Variable
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Type
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Description
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Default
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Notes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+nlongs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+integer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No.
+ of longitude points
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+360
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+nlevs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+integer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No.
+ of levels
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+60
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+dx
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Length of gridbox
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1500.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Init_ABC_opt
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+integer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+How to create ABC initial conditions.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No default
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1=slice of UM; 2=zero apart from pres pert bubble; 3=sum of 1,2; 4=zero
+ apart from buoy pert bubble; 5=sum of 1,4; 6=sum of 2,4; 7=sum of 1,2,4.
+\end_layout
+
+\begin_layout Plain Layout
+8=add 
+\begin_inset Formula $3\left|b_{\mathrm{neg}}^{\prime}\right|$
+\end_inset
+
+ to 
+\begin_inset Formula $b^{\prime}$
+\end_inset
+
+ (
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $b_{\mathrm{neg}}^{\prime}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ is most neg value of 
+\begin_inset Formula $b^{\prime}$
+\end_inset
+
+ pre modification)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color blue
+datadirUM
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color blue
+string
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color blue
+Directory containing UM data.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color blue
+No default
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color blue
+Needed for all options (e.g.
+ for dimension data).
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color blue
+init_um_file
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color blue
+string
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color blue
+UM data filename (expected in above directory).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color blue
+No default
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color blue
+Needed for all options (e.g.
+ for dimension data).
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+latitude
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+integer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Index of single latitude to extract from UM file.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+144
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Init_ABC_opt=1,3, 5, 6, 7
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Regular_vert_grid
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+logical
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Used to set a regularly-spaced vertical grid.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+.TRUE.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Model parameter (pure gravity wave frequency).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.02
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathrm{s}^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Model parameter (modulation of the divergent and advection terms).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.01
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $C$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Model parameter (proportionality constant for the equation of state).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100000.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathrm{m}^{2}\mathrm{s}^{-2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $f$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Model parameter (Coriolis parameter).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0001
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathrm{s}^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+source_x
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+integer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+To specify horizontal grid box of centre of press/buoy pert./most bubble
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+180
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Init_ABC_opt=2,3,4,5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+source_z
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+integer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+To specify vertical grid box of centre of press/buoy pert./most bubble
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+30
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Init_ABC_opt=2,3,4,5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+press_amp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Amplitude of pressure perturbation
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.01
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Init_ABC_opt=2,3
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+buoy_amp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Amplitude of buoyancy perturbation
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Init_ABC_opt=4,5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+x_scale
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+integer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No.
+ of horizontal grids to describe size of press/buoy pert.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Init_ABC_opt=2,3,4,5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+z_scale
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+integer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No.
+ of vertical grids to describe size of press/buoy pert.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Init_ABC_opt=2,3,4,5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Adv_tracer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+logical
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Used to switch on/off tracer advection.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+.FALSE.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Sets up a 
+\begin_inset Formula $4\times5$
+\end_inset
+
+ grid of point initial tracer positions.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+gravity_wave_switch
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+logical
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Used to switch on/off setting of 
+\begin_inset Formula $u=0$
+\end_inset
+
+ to simulate gravity waves.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+.FALSE.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+BoundSpread
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No.
+ of horizontal grid points to spread boundary discontinuity for periodic
+ boundary conditions.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+50.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Moist_on
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+logical
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Set to activate moisture initial conditions
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+.TRUE.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+theta00
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Surface potential temperature
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+300.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+K
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+SH
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Scale height
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+9000.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+m
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+IQ_option
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+integer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Options for q initiation
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1=vapour bubble, 2=vapour stratification, 3=RH stratification
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Lv
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Latent heat constant
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2500.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\unit{Jg^{-1}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+q_amp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Amplitude for initiation of 
+\begin_inset Formula $q$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\unit{gkg^{-1}}$
+\end_inset
+
+ or RH, depending on IQ_option
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+datadirABC_out
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+string
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+Main output directory.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+init_ABC_file
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+string
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+Output filename (in above directory).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Input and output files
+\end_layout
+
+\begin_layout Itemize
+Inputs
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Suitable Unified Model (UM) dump for the Southern UK region (
+\color blue
+datadirUM/init_um_file
+\color inherit
+).
+ This is a netcdf file of fields of 360 longitudes, 287/288 latitudes, and
+ 70/71 vertical levels.
+ The file contains the following: 
+\begin_inset Formula $u$
+\end_inset
+
+ (zonal wind), 
+\begin_inset Formula $v$
+\end_inset
+
+ (meridional wind), 
+\begin_inset Formula $dz\_dt$
+\end_inset
+
+ (vertical wind, 
+\begin_inset Formula $w$
+\end_inset
+
+), 
+\begin_inset Formula $unspecified$
+\end_inset
+
+ (density, 
+\begin_inset Formula $\rho r_{\mathrm{E}}^{2}$
+\end_inset
+
+, where 
+\begin_inset Formula $r_{\mathrm{E}}$
+\end_inset
+
+ is the Earth's radius), 
+\begin_inset Formula $theta$
+\end_inset
+
+ (potential temperature, 
+\begin_inset Formula $\theta$
+\end_inset
+
+), 
+\begin_inset Formula $field7$
+\end_inset
+
+ (exner pressure, 
+\begin_inset Formula $\Pi$
+\end_inset
+
+), and 
+\begin_inset Formula $ht$
+\end_inset
+
+ (2D orographic height field).
+ The dimension names are 
+\begin_inset Formula $x$
+\end_inset
+
+ (longitude axis for 
+\begin_inset Formula $u$
+\end_inset
+
+), 
+\begin_inset Formula $x\_1$
+\end_inset
+
+ (longitude axis for 
+\begin_inset Formula $v$
+\end_inset
+
+, 
+\begin_inset Formula $w$
+\end_inset
+
+, 
+\begin_inset Formula $\rho r_{\mathrm{E}}^{2}$
+\end_inset
+
+, 
+\begin_inset Formula $\theta$
+\end_inset
+
+, 
+\begin_inset Formula $\Pi$
+\end_inset
+
+, and 
+\begin_inset Formula $ht$
+\end_inset
+
+), 
+\begin_inset Formula $y$
+\end_inset
+
+ (latitude axis for 
+\begin_inset Formula $u$
+\end_inset
+
+, 
+\begin_inset Formula $\theta$
+\end_inset
+
+), 
+\begin_inset Formula $y\_1$
+\end_inset
+
+ (latitude axis for 
+\begin_inset Formula $v$
+\end_inset
+
+, 
+\begin_inset Formula $w$
+\end_inset
+
+, 
+\begin_inset Formula $\rho r_{\mathrm{E}}^{2}$
+\end_inset
+
+, 
+\begin_inset Formula $\theta$
+\end_inset
+
+, 
+\begin_inset Formula $\Pi$
+\end_inset
+
+, and 
+\begin_inset Formula $ht$
+\end_inset
+
+), 
+\begin_inset Formula $hybrid\_ht$
+\end_inset
+
+ (vertical axis for 
+\begin_inset Formula $u$
+\end_inset
+
+, 
+\begin_inset Formula $v$
+\end_inset
+
+, and 
+\begin_inset Formula $\rho r_{\mathrm{E}}^{2}$
+\end_inset
+
+), 
+\begin_inset Formula $hybrid\_ht\_1$
+\end_inset
+
+ (vertical axis for 
+\begin_inset Formula $\theta$
+\end_inset
+
+), 
+\begin_inset Formula $ht$
+\end_inset
+
+
+\begin_inset Formula $hybrid\_ht\_2$
+\end_inset
+
+ (vertical axis for 
+\begin_inset Formula $w$
+\end_inset
+
+), 
+\begin_inset Formula $hybrid\_ht\_3$
+\end_inset
+
+ (vertical axis for 
+\begin_inset Formula $\Pi$
+\end_inset
+
+), and 
+\begin_inset Formula $surface$
+\end_inset
+
+ (vertical axis for 
+\begin_inset Formula $ht$
+\end_inset
+
+).
+ The complete filename is datadirUM/init_um_file.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Outputs
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Initial dump for the ABC model.
+ This is a netcdf file of fields of 360 longitudes and 60 vertical levels
+ (
+\color red
+datadirABC_out/init_ABC_file
+\color inherit
+).
+ The file contains the following: 
+\begin_inset Formula $u$
+\end_inset
+
+, 
+\begin_inset Formula $v$
+\end_inset
+
+, 
+\begin_inset Formula $w$
+\end_inset
+
+, 
+\begin_inset Formula $\rho'$
+\end_inset
+
+, 
+\begin_inset Formula $b'$
+\end_inset
+
+, 
+\begin_inset Formula $\rho=1+\rho'$
+\end_inset
+
+, 
+\begin_inset Formula $b_{\mathrm{eff}}$
+\end_inset
+
+, 
+\begin_inset Formula $tracer$
+\end_inset
+
+, 
+\begin_inset Formula $geo\_imbal$
+\end_inset
+
+ (geostrophic imbalance), 
+\begin_inset Formula $hydro\_imbal$
+\end_inset
+
+ (hydrostatic imbalance), 
+\begin_inset Formula $wmom\_source$
+\end_inset
+
+ (vertical momentum source), 
+\begin_inset Formula $horiz\_div$
+\end_inset
+
+ (horizontal divergence), 
+\begin_inset Formula $horiz\_vort$
+\end_inset
+
+ (horizontal vorticity), 
+\begin_inset Formula $E_{\mathrm{k}}$
+\end_inset
+
+ (total kinetic energy), 
+\begin_inset Formula $E_{\mathrm{b}}$
+\end_inset
+
+ (total buoyant energy), 
+\begin_inset Formula $E_{\mathrm{e}}$
+\end_inset
+
+ (elastic energy), 
+\begin_inset Formula $E$
+\end_inset
+
+ (total energy, 
+\begin_inset Formula $E=E_{\mathrm{k}}+E_{\mathrm{b}}+E_{\mathrm{e}}+E_{\mathrm{l}}$
+\end_inset
+
+), 
+\begin_inset Formula $q$
+\end_inset
+
+, 
+\begin_inset Formula $q_{\mathrm{c}}$
+\end_inset
+
+, and RH.
+ The dimension names are 
+\begin_inset Formula $longs\_u$
+\end_inset
+
+ (horizontal axis for 
+\begin_inset Formula $u$
+\end_inset
+
+), 
+\begin_inset Formula $longs\_v$
+\end_inset
+
+ (horizontal axis for other fields), 
+\begin_inset Formula $half\_level$
+\end_inset
+
+ (vertical axis for 
+\begin_inset Formula $u$
+\end_inset
+
+, 
+\begin_inset Formula $v$
+\end_inset
+
+, 
+\begin_inset Formula $\rho'$
+\end_inset
+
+, 
+\begin_inset Formula $\rho$
+\end_inset
+
+, 
+\begin_inset Formula $tracer$
+\end_inset
+
+, 
+\begin_inset Formula $geo\_imbal$
+\end_inset
+
+, 
+\begin_inset Formula $horiz\_div$
+\end_inset
+
+, 
+\begin_inset Formula $horiz\_vort$
+\end_inset
+
+, 
+\begin_inset Formula $q$
+\end_inset
+
+, 
+\begin_inset Formula $q_{\mathrm{c}}$
+\end_inset
+
+, and RH), 
+\begin_inset Formula $full\_level$
+\end_inset
+
+ (vertical axis for 
+\begin_inset Formula $w$
+\end_inset
+
+, 
+\begin_inset Formula $b'$
+\end_inset
+
+, 
+\begin_inset Formula $b_{\mathrm{eff}}$
+\end_inset
+
+, 
+\begin_inset Formula $hydro\_imbal$
+\end_inset
+
+, and 
+\begin_inset Formula $wmom\_source$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+The meanings of the symbols in the output file are described in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "petrie2017abc"
+literal "true"
+
+\end_inset
+
+ and the hydro-ABC paper (submitted to Geo-scientific Model Development,
+ December 2022).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Subsubsection*
+Graphics tools
+\end_layout
+
+\begin_layout Itemize
+The python code 
+\shape italic
+PlotModelFields.py
+\shape default
+ can be used to plot the initial ABC model state.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "40col%"
+height "1pt"
+
+\end_inset
+
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Master_RunNLModel"
+
+\end_inset
+
+Master_RunNLModel
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+Makes a single run of the ABC model from a specified set of initial conditions.
+
+\shape default
+ The model equations are given as Eqs.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:final_eqns"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ above.
+ The dry scheme is described by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "petrie2017abc"
+literal "true"
+
+\end_inset
+
+ and the moisture-related additions are described in a new manuscript (submitted
+ to Geo-scientific Model Development, December 2022).
+\end_layout
+
+\begin_layout Subsubsection*
+To compile
+\end_layout
+
+\begin_layout Standard
+Go to directory containing source code ($ABC_SRC), and issue:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+make Master_RunNLModel.out
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+To run
+\end_layout
+
+\begin_layout Standard
+Prepare namelist file UserOptions.nl, go to directory containing this file,
+ and issue:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+$ABC_SRC/Master_RunNLModel.out < namelist_file
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Namelist variables
+\end_layout
+
+\begin_layout Standard
+The namelist variables are described in UserOptions.nl, and should be placed
+ in the directory where the above run command is issued.
+ The variables are described in the following table, where blue entries
+ describe the 
+\color blue
+input directories/files
+\color inherit
+, red entries describe the 
+\color red
+output directories/files
+\color inherit
+, and purple entries describe the 
+\color purple
+input/output directories/files
+\color inherit
+.
+ An example namelist is given in the file ABCvn1.4/examples/Master_RunNLModel/Use
+rOptions.nl.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="26" columns="5">
+<features islongtable="true" longtabularalignment="center">
+<column alignment="center" valignment="top" width="3cm">
+<column alignment="center" valignment="top" width="1.5cm">
+<column alignment="center" valignment="top" width="5cm">
+<column alignment="center" valignment="top" width="1.5cm">
+<column alignment="center" valignment="top" width="3cm">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+rowcolor{LightGreen}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Variable
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Type
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Description
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Default
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Notes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+nlongs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+integer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No.
+ of longitude points
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+360
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+nlevs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+integer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No.
+ of levels
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+60
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+dx
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Length of gridbox
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1500.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color blue
+datadirABC_in
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color blue
+string
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color blue
+Input directory.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color blue
+init_ABC_file
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color blue
+string
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color blue
+Input filename (in above directory).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Model parameter (pure gravity wave frequency).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.02
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathrm{s}^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Model parameter (modulation of the divergent and advection terms).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.005
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $C$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Model parameter (proportionality constant for the equation of state).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100000.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathrm{m}^{2}\mathrm{s}^{-2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $f$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Model parameter (Coriolis parameter).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0001
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathrm{s}^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $dt$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Model time step size.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathrm{s}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+runlength
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Length of integration.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+60.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathrm{s}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ndumps
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+integer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+The number of times to dump the model state throughout runlength.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Adv_tracer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+logical
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Used to switch on/off tracer advection.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+.FALSE.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Lengthscale_diagnostics
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+logical
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Used to switch on/off computation of characteristic lengthscales of variables
+ at the final time (and other diagnostics).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+.FALSE.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Moist_on
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+logical
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Set to activate moisture initial conditions
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+.TRUE.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+tau
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Evaporation timescale
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.0E4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+s
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+theta00
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Surface potential temperature
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+300.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+K
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+SH
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Scale height
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+9000.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+m
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Lv
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Latent heat constant
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2500.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\unit{Jg^{-1}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Ev_option
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+integer
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Options for evaporation (concerning sign of 
+\begin_inset Formula $b^{\prime}$
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+CO_thresh
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Threshold for condensation
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+datadirABC_out
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+string
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+Main output directory.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+output_ABC_file
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+string
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+Output file (model trajectory, in above directory).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+diagnostics_file
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+string
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+Diagnostics file (in above directory).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+Note that if 
+\shape italic
+runlength
+\shape default
+=0.0 and 
+\shape italic
+ndumps
+\shape default
+=0, the model is not run, and the output of the code (
+\color red
+datadirABC_out/output_ABC_file
+\color inherit
+) is formed from the initial conditions, i.e.
+ the fields that comprise the last time in the input ABC file (
+\color blue
+datadirABC_in/init_ABC_file
+\color inherit
+).
+\end_layout
+
+\begin_layout Subsubsection*
+Input and output files
+\end_layout
+
+\begin_layout Itemize
+Inputs
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Suitable ABC dump (
+\color blue
+datadirABC_in/init_ABC_file
+\color inherit
+, e.g.
+ output by Master_PrepareABC_InitState in Sect.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Master_PrepareABC_InitState"
+
+\end_inset
+
+).
+ The latest time present in this file is used as the initial conditions
+ for the model.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Outputs
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Time sequence of ABC model trajectory (
+\color red
+datadirABC_out/output_ABC_file
+\color inherit
+).
+ This is a netcdf file of fields as the initial dump, but with multiple
+ times.
+\end_layout
+
+\begin_layout Itemize
+Diagnostics file (
+\color red
+datadirABC_out/diagnostics_file
+\color inherit
+).
+ This contains a model-time-step-by-model-time-step output of each component
+ of energy (time, 
+\begin_inset Formula $E_{\mathrm{k}}$
+\end_inset
+
+, 
+\begin_inset Formula $E_{\mathrm{b}}$
+\end_inset
+
+, 
+\begin_inset Formula $E_{\mathrm{e}}$
+\end_inset
+
+, 
+\begin_inset Formula $E$
+\end_inset
+
+ (where the total energy, 
+\begin_inset Formula $E$
+\end_inset
+
+, includes the latent heat contribution)), followed by diagnostics for the
+ last timestep (if Lengthscale_diagnostics is set).
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Subsubsection*
+Graphics tools
+\end_layout
+
+\begin_layout Itemize
+The python code 
+\shape italic
+PlotModelFields.py
+\shape default
+ can be used to plot the ABC model state for a specified output time step.
+\end_layout
+
+\begin_layout Itemize
+The python code 
+\shape italic
+PlotEnergy.py
+\shape default
+ can be used to plot the total energy of the run, as a function of time.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "40col%"
+height "1pt"
+
+\end_inset
+
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Master_Linear_Analysis"
+
+\end_inset
+
+Master_Linear_Analysis
+\end_layout
+
+\begin_layout Standard
+
+\shape italic
+Analyses the linear modes of the ABC model.
+
+\shape default
+ A description of the linear analysis is given in Sect.
+ 4 of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "petrie2017abc"
+literal "true"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
+To compile
+\end_layout
+
+\begin_layout Standard
+Go to directory containing source code ($ABC_SRC), and issue:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+make Master_Linear_Analysis.out
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+To run
+\end_layout
+
+\begin_layout Standard
+Prepare namelist file UserOptions.nl, go to directory containing this file,
+ and issue:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+$ABC_SRC/Master_Linear_Analysis.out < namelist_file
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Namelist variables
+\end_layout
+
+\begin_layout Standard
+The namelist variables are described in UserOptions.nl, and should be placed
+ in the directory where the above run command is issued.
+ The variables are described in the following table, where blue entries
+ describe the 
+\color blue
+input directories/files
+\color inherit
+, red entries describe the 
+\color red
+output directories/files
+\color inherit
+, and purple entries describe the 
+\color purple
+input/output directories/files
+\color inherit
+.
+ An example namelist is given in the file ABCvn1.4/examples/Master_Linear_Analysi
+s/UserOptions.nl.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="5">
+<features islongtable="true" longtabularalignment="center">
+<column alignment="center" valignment="top" width="3cm">
+<column alignment="center" valignment="top" width="1.5cm">
+<column alignment="center" valignment="top" width="5cm">
+<column alignment="center" valignment="top" width="1.5cm">
+<column alignment="center" valignment="top" width="3cm">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+rowcolor{LightGreen}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Variable
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Type
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Description
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Default
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Notes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Model parameter (pure gravity wave frequency).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.02
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathrm{s}^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Model parameter (modulation of the divergent and advection terms).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.005
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $C$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Model parameter (proportionality constant for the equation of state).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100000.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathrm{m}^{2}\mathrm{s}^{-2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $f$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Model parameter (Coriolis parameter).
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0001
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathrm{s}^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $H$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double precision
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Model domain height.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14862.01
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathrm{m}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+datadirLinearAnal
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+string
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\color red
+Output directory.
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Input and output files
+\end_layout
+
+\begin_layout Itemize
+Inputs
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+No inputs.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Outputs
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Gravity wave frequencies file (
+\color red
+datadirLinearAnal/grav_frequency.dat
+\color inherit
+).
+ Given as a function of horizontal and vertical wavenumbers.
+\end_layout
+
+\begin_layout Itemize
+Acoustic wave frequencies file (
+\color red
+datadirLinearAnal/acou_frequency.dat
+\color inherit
+).
+ Given as a function of horizontal and vertical wavenumbers.
+\end_layout
+
+\begin_layout Itemize
+Gravity wave speed (in the horizontal) file (
+\color red
+datadirLinearAnal/hori_grav_speed.dat
+\color inherit
+).
+ Given as a function of horizontal and vertical wavenumbers.
+\end_layout
+
+\begin_layout Itemize
+Acoustic wave speed (in the horizontal) file (
+\color red
+datadirLinearAnal/hori_acou_speed.dat
+\color inherit
+).
+ Given as a function of horizontal and vertical wavenumbers.
+\end_layout
+
+\begin_layout Itemize
+Gravity wave speed (in the vertical) file (
+\color red
+datadirLinearAnal/vert_grav_speed.dat
+\color inherit
+).
+ Given as a function of horizontal and vertical wavenumbers.
+\end_layout
+
+\begin_layout Itemize
+Acoustic wave speed (in the vertical) file (
+\color red
+datadirLinearAnal/vert_acou_speed.dat
+\color inherit
+).
+ Given as a function of horizontal and vertical wavenumbers.
+\end_layout
+
+\end_deeper
+\begin_layout Subsubsection*
+Graphics tools
+\end_layout
+
+\begin_layout Itemize
+The python code 
+\shape italic
+PlotWaveSpeeds.py
+\shape default
+ can be used to plot the wave frequencies and wave group speeds.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "40col%"
+height "1pt"
+
+\end_inset
+
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "/home/ross/Papers/Database/References"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
