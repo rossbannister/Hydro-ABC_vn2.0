@@ -1,0 +1,14 @@
+INTERFACE
+  SUBROUTINE Boundaries_CV (state, CVT_order, realspace, set_1, set_2, set_3, set_4, set_5, set_6)
+  USE DefConsTypes, ONLY : CV_type
+  TYPE(CV_type),     INTENT(INOUT) :: state
+  INTEGER,           INTENT(IN)    :: CVT_order  ! 1 or 2 means convetional scheme, 3 means NM scheme
+  LOGICAL,           INTENT(IN)    :: realspace  ! Set if control vector is in real space
+  LOGICAL, OPTIONAL, INTENT(IN)    :: set_1
+  LOGICAL, OPTIONAL, INTENT(IN)    :: set_2
+  LOGICAL, OPTIONAL, INTENT(IN)    :: set_3
+  LOGICAL, OPTIONAL, INTENT(IN)    :: set_4
+  LOGICAL, OPTIONAL, INTENT(IN)    :: set_5
+  LOGICAL, OPTIONAL, INTENT(IN)    :: set_6
+  END SUBROUTINE Boundaries_CV
+END INTERFACE
